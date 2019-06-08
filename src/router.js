@@ -7,11 +7,15 @@ import {
 
 import TutorialScreen from './screens/TutorialScreen'
 import RecipeSearchScreen from './screens/RecipeSearchScreen'
+import RecipeListScreen from './screens/RecipeListScreen'
+import RecipeWebViewScreen from './screens/RecipeWebViewScreen'
 
 
 const MainNavigator = createStackNavigator({
   // Recipe List Screen
-  recipeSearch: RecipeSearchScreen
+  recipeSearch: RecipeSearchScreen,
+  recipeList: RecipeListScreen,
+  recipeWebView: RecipeWebViewScreen,
 }, {
   // Options
   initialRouteName: 'recipeSearch',

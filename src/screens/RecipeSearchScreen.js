@@ -26,6 +26,10 @@ class RecipeSearchScreen extends React.PureComponent {
     }
   }
 
+  onSearch() {
+    this.props.navigation.navigate('recipeList')
+  }
+
   addIngredient(ingredient) {
     if (this.state.selected.indexOf(ingredient) < 0) {
       this.setState({selected: [...this.state.selected, ingredient]})
@@ -96,6 +100,7 @@ class RecipeSearchScreen extends React.PureComponent {
             iconRight={{name: 'md-color-wand', size: 30, color: colors.white}}
             textStyle={{ color: colors.textWhite, fontSize: 22 }}
             style={screenStyles.continueButton}
+            onPress={() => this.onSearch()}
           />
         </View>
       </View>
