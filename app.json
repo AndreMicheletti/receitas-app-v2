@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ICook",
-    "slug": "icook_app",
+    "name": "ReceitApp",
+    "slug": "receitapp",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -10,7 +10,7 @@
       "web"
     ],
     "primaryColor": "#FE8558",
-    "version": "1.0.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -31,8 +31,9 @@
     },
     "android": {
       "package": "com.async.receitapp",
-      "versionCode": 10,
-      "icon": "./assets/icon.png"
+      "versionCode": 20,
+      "icon": "./assets/icon.png",
+      "permissions": []
     }
   }
 }

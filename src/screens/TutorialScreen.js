@@ -3,7 +3,7 @@ import { View, AsyncStorage } from 'react-native';
 import { Slides } from '../components';
 
 const TUTORIAL_DATA = [
-  { text: 'Este é o ICook!', color: '#FEB658' },
+  { text: 'Este é o ReceitApp!', color: '#FEB658' },
   { text: 'Decida se quer uma receita doce ou salgada', color: '#3DAF7B' },
   { text: 'Insira os ingredientes que você tem em casa', color: '#C85177' },
   { text: 'Descubra uma receita fácil para fazer agora mesmo!', color: '#FE8558' },

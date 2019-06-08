@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, ScrollView, TextInput, Keyboard } from 'react-native';
+import { View, ScrollView, TextInput, Keyboard, ActivityIndicator, InteractionManager } from 'react-native';
 import Button from './Button'
+import _ from 'lodash';
 
 import colors from '../colors'
 import styles from '../styles'
@@ -15,23 +16,33 @@ class AutoCompleteInput extends React.PureComponent {
     super(props);
     this.state = {
       text: '',
-      match: []
+      match: [],
+      loading: false
     };
   }
 
   _textChanged(text) {
-    const match = [];
-    if (text !== '') {
-      this.props.options.forEach(opt => {
-        if (opt && opt.toLowerCase().includes(text.toLowerCase())) {
-          match.push(opt)
+    if (text === '') {
+      this.setState({text, match: [], loading: false});
+    } else {
+      this.setState({text, loading: true});
+
+      setTimeout(() => {
+        const match = _.filter(this.props.options, opt => opt && opt.toLowerCase().includes(text.toLowerCase()));
+        if (text === this.state.text) {
+          this.setState({text, match, loading: false});
         }
-      });
+      }, 50);
     }
-    this.setState({text, match});
   }
 
   renderOptions() {
+    if (this.state.loading) {
+      return (
+        <ActivityIndicator color={colors.textBlack} size={25} />
+      );
+    }
+
     return this.state.match.map(value => (
       <Button
         key={value}
@@ -61,7 +72,7 @@ class AutoCompleteInput extends React.PureComponent {
           placeholderTextColor="gray"
           selectionColor={colors.orangeDark}
         />
-        {this.state.match.length > 0 &&
+        {(this.state.match.length > 0 || this.state.loading) &&
           (<ScrollView
             keyboardShouldPersistTaps='handled'
             style={componentStyles.options}

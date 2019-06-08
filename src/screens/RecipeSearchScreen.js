@@ -1,7 +1,10 @@
 import React from 'react';
-import { View, Text, Dimensions, ScrollView } from 'react-native';
+import { View, Text, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
+import { connect } from 'react-redux';
 
 import { AutoCompleteInput, Button } from '../components';
+
+import { fetchIngredients, ingredientSelect, removeIngredient, unselectAllIngredient } from '../actions/ingredientActions';
 
 import styles from '../styles';
 import colors from '../colors';
@@ -21,9 +24,11 @@ class RecipeSearchScreen extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {
-      selected: ['leite', 'leite integral', 'ovo', 'carne', 'frango', 'batata']
-    }
+    this.state = {}
+  }
+
+  componentWillMount() {
+    this.props.fetchIngredients('salgado');
   }
 
   onSearch() {
@@ -31,17 +36,19 @@ class RecipeSearchScreen extends React.PureComponent {
   }
 
   addIngredient(ingredient) {
-    if (this.state.selected.indexOf(ingredient) < 0) {
-      this.setState({selected: [...this.state.selected, ingredient]})
-    }
+    // if (this.state.selected.indexOf(ingredient) < 0) {
+    //   this.setState({selected: [...this.state.selected, ingredient]})
+    // }
+    this.props.ingredientSelect(ingredient)
   }
 
   removeIngredient(ingredient) {
-    this.setState({selected: this.state.selected.filter(ing => ing !== ingredient)})
+    // this.setState({selected: this.state.selected.filter(ing => ing !== ingredient)})
+    this.props.removeIngredient(ingredient)
   }
 
   renderSelected() {
-    return this.state.selected.map(ing => {
+    return this.props.ingredients.selected.map(ing => {
       return (
         <Button
           key={ing}
@@ -52,6 +59,21 @@ class RecipeSearchScreen extends React.PureComponent {
         />
       )
     })
+  }
+
+  renderIngredientInput() {
+    if (this.props.ingredients.loading) {
+      return (
+        <ActivityIndicator size={28} color='white' />
+      )
+    }
+
+    return (
+      <AutoCompleteInput
+        onSelect={(ingredient) => this.addIngredient(ingredient)}
+        options={this.props.ingredients.list}
+      />
+    );
   }
 
   render() {
@@ -66,15 +88,13 @@ class RecipeSearchScreen extends React.PureComponent {
             que ingredientes você tem?
           </Text>
           <View style={{ flex: 1, paddingTop: 10 }}>
-            <AutoCompleteInput
-              onSelect={(ingredient) => this.addIngredient(ingredient)}
-            />
+            {this.renderIngredientInput()}
           </View>
         </View>
 
         <View style={{ flex: 2 }}>
           <View style={{ height: 85, justifyContent: 'center', alignItems: 'stretch', paddingLeft: 20, paddingRight: 20 }}>
-            {this.state.selected.length > 0 && (
+            {this.props.ingredients.selected.length > 0 && (
               <React.Fragment>
                 <Text style={{ color: colors.textWhite, fontWeight: 'bold', fontSize: 24 }}>
                   Seus ingredientes
@@ -95,13 +115,14 @@ class RecipeSearchScreen extends React.PureComponent {
 
 
         <View style={{ width: SCREEN_WIDTH, height: 80, marginTop: 15 }}>
-          <Button
-            text='Me indique receitas'
-            iconRight={{name: 'md-color-wand', size: 30, color: colors.white}}
-            textStyle={{ color: colors.textWhite, fontSize: 22 }}
-            style={screenStyles.continueButton}
-            onPress={() => this.onSearch()}
-          />
+          {this.props.ingredients.selected.length > 0 &&
+            <Button
+              text='Me indique receitas'
+              iconRight={{name: 'md-color-wand', size: 30, color: colors.white}}
+              textStyle={{ color: colors.textWhite, fontSize: 22 }}
+              style={screenStyles.continueButton}
+              onPress={() => this.onSearch()}
+            />}
         </View>
       </View>
     )
@@ -141,4 +162,15 @@ const screenStyles = {
   }
 };
 
-export default RecipeSearchScreen;
+const mapStateToProps = (state) => {
+  return {
+    ingredients: state.ingredients
+  }
+};
+
+export default connect(mapStateToProps, {
+  fetchIngredients,
+  ingredientSelect,
+  removeIngredient,
+  unselectAllIngredient
+})(RecipeSearchScreen);
